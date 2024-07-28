@@ -1,0 +1,36 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: dockerfile_database
+    container_name: database
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=Hotel
+      - BACKUP_DIR=backup
+    volumes:
+      - ./data:/backup
+
+  back-end:
+    build:
+      context: .
+      dockerfile: dockerfile_backend
+    container_name: backend
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - BACKUP_DIR=backup
+    ports:
+      - 8000:8000
+    volumes:
+      - ./data:/back_end/backup
+
+  front-end:
+    build:
+      context: .
+      dockerfile: dockerfile_frontend
+    container_name: frontend
+    ports:
+      - 3000:3000

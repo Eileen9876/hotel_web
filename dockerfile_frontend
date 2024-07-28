@@ -1,0 +1,16 @@
+FROM node:18
+
+EXPOSE 3000
+    
+# 設置專案
+RUN mkdir /front_end
+COPY ./front_end /front_end
+
+# 設置工作位置
+WORKDIR /front_end
+
+# 安裝套件包
+RUN npm install
+
+# 執行
+CMD npm start

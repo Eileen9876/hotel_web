@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>Home</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<!-- //Meta tag Keywords -->
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- banner slider -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		img {
+			width: 100%;
+			object-fit: cover;
+			/* 和background-image設定background-size: cover一樣，圖片剛好填滿 */
+			object-position: center;
+		}
+
+		h3 {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.container_ {
+			padding-bottom: 20px;
+		}
+
+		.btn_ {
+			background-color: #6e6e6e;
+			border-radius: 5px;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			width: 200px;
+			height: 50px;
+			font-size: 20px;
+		}
+
+		#book_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			margin-left: 20px;
+			height: 30px;
+			width: 100px;
+			padding-top: 2px;
+
+
+		}
+
+		#store_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+		}
+
+		.store_col_ {
+			justify-content: center;
+			padding: 20px;
+			margin: 10px;
+			background-color: #e8e8e8;
+			border-radius: 5px;
+			height: 500px;
+		}
+
+		.store_col_info {
+			align-content: center;
+			vertical-align: middle;
+			height: 150px;
+			width: 100%;
+			margin-bottom: 15px;
+			overflow-y:auto; 
+		}
+
+		.store_col_ img {
+			border-radius: 5px;
+			margin-bottom: 20px;
+			height: 200px;
+		}
+
+		.roomIdx {
+			width: auto;
+			height: 50px;
+			color: rgb(89, 89, 89);
+			font-size: 20px;
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		.box1 {
+			border-radius: 5px;
+			padding: 10px;
+			margin: 5px;
+			background-color: #f7f7f7;
+		}
+
+		.box2 {
+			color: rgb(89, 89, 89);
+			font-size: 50px;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.box3 {
+			border-top: 2px solid #c7c4c4;
+			padding: 25px;
+			margin: 5px;
+			font-size: 15px;
+		}
+
+		p {
+			color: #4f4f4f;
+		}
+
+		#addStoreBtn_div {
+			justify-content: center;
+			margin: 10px;
+			border-radius: 5px;
+			height: 500px;
+		}
+
+		#addStoreBtn {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 500px;
+		}
+
+		input {
+			display: block;
+			padding: 0.375rem 0.75rem;
+			font-size: 1rem;
+			line-height: 1.5;
+			color: #495057;
+			background-color: #fff;
+			background-clip: padding-box;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+			height: 30px;
+		}
+
+		.label {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		#bookRecord {
+			justify-content: center;
+			margin-top: 50px;
+			margin-bottom: 100px;
+		}
+
+		#bookTable {
+			margin-top: 20px;
+			font-size: 15px;
+		}
+
+		.table th,
+		.table td {
+			vertical-align: middle;
+			text-align: center;
+			padding: 8px;
+		}
+
+		#book_page_idx_ {
+			justify-content: center;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="#">
+					<p class="nav_p_">訂房資訊</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#store_div">
+					<p class="nav_p_">周邊店家</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<!-- 當日訂房資訊 -->
+	<div id="room_div" class="container">
+		<h3 class="text-center text-bl font-weight-bold" style="margin-top: 100px; margin-bottom: 50px;">訂房資訊</h3>
+		<div class="row" style="margin-right: -5px; margin-left: -5px;">
+			<div class="col box1" id="room01">
+				<div class="roomIdx">01</div>
+			</div>
+			<div class="col box1" id="room02">
+				<div class="roomIdx">02</div>
+			</div>
+		</div>
+		<div class="row" style="margin-right: -5px; margin-left: -5px;">
+			<div class="col box1" id="room03">
+				<div class="roomIdx">03</div>
+			</div>
+			<div class="col box1" id="room04">
+				<div class="roomIdx">04</div>
+			</div>
+		</div>
+		<div class="row" style="margin-right: -5px; margin-left: -5px;">
+			<div class="col box1" id="room_05">
+				<div class="roomIdx">05</div>
+			</div>
+		</div>
+	</div>
+	<!-- //當日訂房資訊 -->
+
+	<!-- 訂房紀錄查詢 -->
+	<div class="container" id="bookRecord">
+		<!-- 查詢輸入欄位 -->
+		<div class="row align-items-center justify-content-center">
+			<div class="label">姓名：</div>
+			<input type="text" style="width: 100px;" id="book_name">
+			<div class="label">日期：</div>
+			<input type="date" style="width: 135px;" id="book_startDate"/>
+			<div class="label">~</div>
+			<input type="date" style="width: 135px;" id="book_endDate"/>
+			<button type="submit" class="btn" id="book_btn_">查詢</button>
+		</div>
+		<!-- //查詢輸入欄位 -->
+		<!-- 查詢輸出欄位 -->
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped" id="bookTable">
+				<thead>
+					<tr>
+						<th scope="col">編號</th>
+						<th scope="col">房間號</th>
+						<th scope="col">姓名</th>
+						<th scope="col">Email</th>
+						<th scope="col">抵達日期</th>
+						<th scope="col">離開日期</th>
+						<th scope="col">人數</th>
+					</tr>
+				</thead>
+				<tbody id="book_tbody"></tbody>
+			</table>
+		</div>
+		<!-- //查詢輸出欄位 -->
+		<div class="row" id="book_page_idx_"></div>
+	</div>
+	<!-- //訂房紀錄查詢 -->
+
+	<!-- 周邊店家 -->
+	<div id="store_div" class="container-fluid container_">
+		<h3 class="text-center text-bl font-weight-bold" style="padding-top: 100px; margin-bottom: 50px;">周邊店家</h3>
+		<div class="row justify-content-center" id="storeInfo_">
+			<div class="col-4" id="addStoreBtn_div">
+				<a href="/control/addStore" class="btn" id="addStoreBtn"><h4>新增店家</h4></a>
+			</div>
+		</div>
+	</div>
+	<!-- //周邊店家 -->
+
+	<script src="/javascripts/controlIndex.js"></script>
+</body>
+
+</html>

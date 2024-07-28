@@ -1,0 +1,13 @@
+FROM mysql:9.0.1
+
+EXPOSE 3306
+
+# 設置備份資料夾
+RUN mkdir /backup
+
+# 設置起始檔
+COPY ./init.sql /docker-entrypoint-initdb.d/
+COPY ./startup_database.sh .
+
+# 執行
+CMD ["./startup_database.sh"]

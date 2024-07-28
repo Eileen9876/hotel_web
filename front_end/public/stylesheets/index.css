@@ -1,0 +1,26 @@
+div {
+    margin: 0 auto;
+    width: 250px;
+    padding: 6px;
+}
+
+button {
+    width: 106%;
+    height: 30px;
+    margin-top: 10px;
+}
+
+table {
+    width: 100%;
+    text-align: center;
+}
+
+input {
+    width: 100%;
+    padding: 6px;
+}
+
+select {
+    width: 106%;
+    padding: 6px;
+}
