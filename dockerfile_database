@@ -12,7 +12,7 @@ COPY ./startup_database.sh .
 # 因作業系統不同，導致格式不同，需進行格式轉換
 RUN sed -i -e 's/\r$//' startup_database.sh
 
-RUN chmod -x ./startup_database.sh
+RUN chmod +x ./startup_database.sh
 
 # 執行
 CMD ["./startup_database.sh"]
