@@ -16,6 +16,8 @@ done
 
 #============ 資料備份 ============#
 
+cp ../usr/share/zoneinfo/Asia/Taipei ../etc/localtime # 更換時區
+
 TIMESTAMP=$(date +'%Y%m%d%H%M')
 SLEEP_TIME=60 # sec
 
