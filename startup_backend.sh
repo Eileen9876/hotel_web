@@ -6,11 +6,19 @@ dir="roomUseDate storeInfo";
 
 for d in $dir
 do 
-    file=$(ls -1 ${BACKUP_DIR}/$d | sort -r | head -n 1)
+    if [-d "${BACKUP_DIR}/$d"]; then
+        # 資料夾存在，複製最新的備份檔，備份檔以創建日期命名 YYYYmmddHHMM
+        
+        file=$(ls -1 ${BACKUP_DIR}/$d | sort -r | head -n 1)
 
-    if [ -n "$file" ]; then
-        cp ${BACKUP_DIR}/$d/$file data/$d.json
-        echo COPY FILE ${BACKUP_DIR}/$d/$file
+        if [ -n "$file" ]; then
+            cp ${BACKUP_DIR}/$d/$file data/$d.json
+            echo COPY FILE ${BACKUP_DIR}/$d/$file
+        fi
+    else
+        # 資料夾不存在，創建資料夾
+
+        mkdir ${BACKUP_DIR}/$d
     fi
 done
 

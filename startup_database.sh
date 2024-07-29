@@ -2,11 +2,19 @@
 
 #============ 複製備份檔 ============#
 
-file=$(ls -1 ${BACKUP_DIR}/sql_backup | sort -r | head -n 1)
+if [-d "${BACKUP_DIR}/sql_backup"]; then
+    # 資料夾存在，複製最新的備份檔，備份檔以創建日期命名 YYYYmmddHHMM
 
-if [ -n "$file" ]; then
-    cp ${BACKUP_DIR}/sql_backup/$file docker-entrypoint-initdb.d/init.sql
-    echo COPY FILE ${BACKUP_DIR}/sql_backup/$file
+    file=$(ls -1 ${BACKUP_DIR}/sql_backup | sort -r | head -n 1)
+
+    if [ -n "$file" ]; then
+        cp ${BACKUP_DIR}/sql_backup/$file docker-entrypoint-initdb.d/init.sql
+        echo COPY FILE ${BACKUP_DIR}/sql_backup/$file
+    fi
+else
+    # 資料夾不存在，創建資料夾
+    
+    mkdir ${BACKUP_DIR}/sql_backup
 fi
 
 #============ 資料備份 ============#
