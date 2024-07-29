@@ -6,7 +6,7 @@ dir="roomUseDate storeInfo";
 
 for d in $dir
 do 
-    if [-d "${BACKUP_DIR}/$d"]; then
+    if [ -d "${BACKUP_DIR}/$d" ]; then
         # 資料夾存在，複製最新的備份檔，備份檔以創建日期命名 YYYYmmddHHMM
         
         file=$(ls -1 ${BACKUP_DIR}/$d | sort -r | head -n 1)

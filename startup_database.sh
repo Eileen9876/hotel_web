@@ -2,7 +2,7 @@
 
 #============ 複製備份檔 ============#
 
-if [-d "${BACKUP_DIR}/sql_backup"]; then
+if [ -d "${BACKUP_DIR}/sql_backup" ]; then
     # 資料夾存在，複製最新的備份檔，備份檔以創建日期命名 YYYYmmddHHMM
 
     file=$(ls -1 ${BACKUP_DIR}/sql_backup | sort -r | head -n 1)
