@@ -1,0 +1,629 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>管理員 - 主頁面</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<!-- //Meta tag Keywords -->
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- banner slider -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		img {
+			width: 100%;
+			object-fit: cover;
+			/* 和background-image設定background-size: cover一樣，圖片剛好填滿 */
+			object-position: center;
+		}
+
+		h3 {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.container_ {
+			padding-bottom: 20px;
+		}
+
+		.btn_ {
+			background-color: #6e6e6e;
+			border-radius: 5px;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			width: 200px;
+			height: 50px;
+			font-size: 20px;
+		}
+
+		#book_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			margin-left: 20px;
+			height: 30px;
+			width: 100px;
+			padding-top: 2px;
+
+
+		}
+
+		#store_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+		}
+
+		.store_col_ {
+			justify-content: center;
+			padding: 20px;
+			margin: 10px;
+			background-color: #e8e8e8;
+			border-radius: 5px;
+			height: 500px;
+		}
+
+		.store_col_info {
+			align-content: center;
+			vertical-align: middle;
+			height: 150px;
+			width: 100%;
+			margin-bottom: 15px;
+			overflow-y: auto;
+		}
+
+		.store_col_ img {
+			border-radius: 5px;
+			margin-bottom: 20px;
+			height: 200px;
+		}
+
+		.roomIdx {
+			width: auto;
+			height: 50px;
+			color: rgb(89, 89, 89);
+			font-size: 20px;
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		.box1 {
+			border-radius: 5px;
+			padding: 10px;
+			margin: 5px;
+			background-color: #f7f7f7;
+		}
+
+		.box2 {
+			color: rgb(89, 89, 89);
+			font-size: 50px;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.box3 {
+			border-top: 2px solid #c7c4c4;
+			padding: 25px;
+			margin: 5px;
+			font-size: 15px;
+		}
+
+		p {
+			color: #4f4f4f;
+		}
+
+		#addStoreBtn_div {
+			justify-content: center;
+			margin: 10px;
+			border-radius: 5px;
+			height: 500px;
+		}
+
+		#addStoreBtn {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 500px;
+		}
+
+		input {
+			display: block;
+			padding: 0.375rem 0.75rem;
+			font-size: 1rem;
+			line-height: 1.5;
+			color: #495057;
+			background-color: #fff;
+			background-clip: padding-box;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+			height: 30px;
+		}
+
+		.label {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		#bookRecord {
+			justify-content: center;
+			margin-top: 50px;
+			margin-bottom: 100px;
+		}
+
+		#bookTable {
+			margin-top: 20px;
+			font-size: 15px;
+		}
+
+		.table th,
+		.table td {
+			vertical-align: middle;
+			text-align: center;
+			padding: 8px;
+		}
+
+		#book_page_idx_ {
+			justify-content: center;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="#">
+					<p class="nav_p_">訂房資訊</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#unapprovedStore">
+					<p class="nav_p_">未審核商店列表</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<!-- 當日訂房資訊 -->
+	<div id="room_div" class="container">
+		<h3 class="text-center text-bl font-weight-bold" style="margin-top: 100px; margin-bottom: 50px;">訂房資訊</h3>
+		<div class="row" style="margin-right: -5px; margin-left: -5px;">
+			<div class="col box1" id="room01">
+				<div class="roomIdx">01</div>
+			</div>
+			<div class="col box1" id="room02">
+				<div class="roomIdx">02</div>
+			</div>
+		</div>
+		<div class="row" style="margin-right: -5px; margin-left: -5px;">
+			<div class="col box1" id="room03">
+				<div class="roomIdx">03</div>
+			</div>
+			<div class="col box1" id="room04">
+				<div class="roomIdx">04</div>
+			</div>
+		</div>
+		<div class="row" style="margin-right: -5px; margin-left: -5px;">
+			<div class="col box1" id="room_05">
+				<div class="roomIdx">05</div>
+			</div>
+		</div>
+	</div>
+	<!-- //當日訂房資訊 -->
+
+	<!-- 訂房紀錄查詢 -->
+	<div class="container" id="bookRecord">
+		<!-- 查詢輸入欄位 -->
+		<div class="row align-items-center justify-content-center">
+			<div class="label">姓名：</div>
+			<input type="text" style="width: 100px;" id="book_name">
+			<div class="label">日期：</div>
+			<input type="date" style="width: 135px;" id="book_startDate" />
+			<div class="label">~</div>
+			<input type="date" style="width: 135px;" id="book_endDate" />
+			<button type="submit" class="btn" id="book_btn_">查詢</button>
+		</div>
+		<!-- //查詢輸入欄位 -->
+		<!-- 查詢輸出欄位 -->
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped" id="bookTable">
+				<thead>
+					<tr>
+						<th scope="col">編號</th>
+						<th scope="col">房號</th>
+						<th scope="col">房型</th>
+						<th scope="col">入住日期</th>
+						<th scope="col">退房日期</th>
+						<th scope="col">姓名</th>
+						<th scope="col">Email</th>
+					</tr>
+				</thead>
+				<tbody id="book_tbody">
+				</tbody>
+			</table>
+		</div>
+		<!-- //查詢輸出欄位 -->
+		<div class="row" id="book_page_idx_"></div>
+	</div>
+	<!-- //訂房紀錄查詢 -->
+
+	<!-- 未批准商店 -->
+	<h3 class="text-center text-bl font-weight-bold" style="padding-top: 100px; margin-bottom: 50px;">未批准商店</h3>
+
+	<!-- 表格 -->
+	<div class="container align-items-center justify-content-center" id="unapprovedStore">
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped" id="unapprovedStoreTable">
+				<thead>
+					<tr>
+						<th scope="col">識別碼</th>
+						<th scope="col">商店名稱</th>
+						<th scope="col">詳細資訊</th>
+					</tr>
+				</thead>
+				<tbody id="store_tbody"></tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //表格 -->
+
+	<!-- 頁數 -->
+	<div class="container" id="clickChart_div">
+		<div class="row justify-content-md-center">
+			<div class="row" id="store_page_idx_"></div>
+		</div>
+	</div>
+	<!-- //頁數 -->
+
+	<!-- //未批准商店 -->
+
+	<script type="module">
+		$.ajaxSetup({
+			async: false,
+			contentType: "application/json; charset=utf-8"
+		});
+
+		const error_message = {
+			"101": "token 過期",
+			"102": "token 無效",
+			"103": "無token",
+			"201": "Email不符合格式",
+			"202": "密碼不符合規定",
+			"203": "密碼錯誤",
+			"204": "帳號不存在",
+			"301": "該時段已無空房",
+			"999": "伺服器錯誤"
+		}
+
+		const room_type_map = {
+			"single": "單人房",
+			"double": "雙人房",
+			"quad": "四人房"
+		}
+
+		get_room_data();
+
+		get_unapproved_store_data();
+
+		// 为父容器绑定事件监听器
+		document.addEventListener('DOMContentLoaded', () => {
+			document.body.addEventListener('click', (event) => {
+				if (event.target.matches('.book-page-link')) {
+					event.preventDefault();
+					const action = event.target.dataset.action;
+					bookPageChange(action);
+				}
+			});
+		});
+
+		// 为父容器绑定事件监听器
+		document.addEventListener('DOMContentLoaded', () => {
+			document.body.addEventListener('click', (event) => {
+				if (event.target.matches('.store-page-link')) {
+					event.preventDefault();
+					const action = event.target.dataset.action;
+					storePageChange(action);
+				}
+			});
+		});
+
+		//-------------------- 取得訂房資訊並顯示於網頁上 --------------------//
+
+		$("#book_btn_").on('click', () => {
+			const data = {
+				name: $("#book_name").val(),
+				start_date: $("#book_startDate").val(),
+				end_date: $("#book_endDate").val(),
+				page_index: 1
+			}
+
+			//取得訂房資訊
+			$.post("http://127.0.0.1:8000/get_booking_info/admin", JSON.stringify(data), (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("取得訂房資料失敗，" + error_message[res["code"]]);
+					else alert("取得訂房資料失敗，不明錯誤");
+					return;
+				}
+
+				listData(res["content"]);
+			});
+
+			//將資料顯示於網頁上
+			async function listData(data) {
+				if (data.length == 0) {
+					$("#book_tbody").html("");
+					return;
+				}
+
+				var htmlContent = "";
+
+				for (var idx in data) {
+					var data_ = data[idx]
+
+					htmlContent += "<tr>\
+										<td>" + data_["reserve_id"] + "</td>\
+										<td>" + data_["room_number"] + "</td>\
+										<td>" + room_type_map[data_["room_type"]] + "</td>\
+										<td>" + data_["check_in_date"] + "</td>\
+										<td>" + data_["check_out_date"] + "</td>\
+										<td>" + data_["account_name"] + "</td>\
+										<td>" + data_["account_email"] + "</td>\
+									</tr>"
+				};
+
+				$("#book_tbody").html(htmlContent);
+
+				htmlContent = '<div class="col-auto"><a href="#" class="book-page-link" data-action="l" style="color: #6e6e6e;">&laquo;</a></div>\
+                        <div class="col-auto" id="book_table_idx">1</div>\
+                        <div class="col-auto"><a href="#" class="book-page-link" data-action="r" style="color: #6e6e6e;">&raquo;</a></div>'
+
+				$("#book_page_idx_").html(htmlContent);
+			}
+		});
+
+		//表單頁面
+		function bookPageChange(dir) {
+			//確認是否超出頁數
+			var pageIdx;
+			if (dir == "l") pageIdx = parseInt($("#book_table_idx").html()) - 1;
+			else pageIdx = parseInt($("#book_table_idx").html()) + 1;
+
+			if (pageIdx == 0) return;
+
+			//設置頁碼
+			$("#book_table_idx").html(pageIdx);
+
+			const data = {
+				name: $("#book_name").val(),
+				start_date: $("#book_startDate").val(),
+				end_date: $("#book_endDate").val(),
+				page_index: pageIdx
+			}
+
+			//取得訂房資訊
+			$.post("http://127.0.0.1:8000/get_booking_info/admin", JSON.stringify(data), (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("取得訂房資料失敗，" + error_message[res["code"]]);
+					else alert("取得訂房資料失敗，不明錯誤");
+					return;
+				}
+
+				listBookData(res["content"]);
+			});
+
+			//將資料顯示於網頁上
+			async function listBookData(data) {
+				if (data.length == 0) {
+					$("#book_tbody").html("");
+					return;
+				}
+
+				var htmlContent = "";
+
+				for (var idx in data) {
+					var data_ = data[idx]
+
+					htmlContent += "<tr>\
+										<td>" + data_["reserve_id"] + "</td>\
+										<td>" + data_["room_number"] + "</td>\
+										<td>" + room_type_map[data_["room_type"]] + "</td>\
+										<td>" + data_["check_in_date"] + "</td>\
+										<td>" + data_["check_out_date"] + "</td>\
+										<td>" + data_["account_name"] + "</td>\
+										<td>" + data_["account_email"] + "</td>\
+									</tr>"
+				};
+
+				$("#book_tbody").html(htmlContent);
+			}
+		}
+
+		//-------------------- 取得當天房客資訊並顯示於網頁上 --------------------//
+
+		function get_room_data() {
+			const date = new Date();
+
+			const data = {
+				name: "",
+				start_date: date.toISOString().split('T')[0],
+				end_date: date.toISOString().split('T')[0],
+				page_index: 1
+			}
+
+			console.log("get room data: " + data)
+
+			//取得訂房資訊
+			$.post("http://127.0.0.1:8000/get_booking_info/admin", JSON.stringify(data), (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("取得訂房資料失敗，" + error_message[res["code"]]);
+					else alert("取得訂房資料失敗，不明錯誤");
+					return;
+				}
+
+				listData(res["content"]);
+			});
+
+
+			//將資料顯示於網頁上
+			async function listData(listData) {
+				console.log("data: " + listData)
+
+				for (var idx in listData) {
+
+					var data_ = listData[idx]
+
+					console.log("data[" + idx + "]: " + JSON.stringify(data_))
+
+					var htmlContent = $("#room" + data_["room_number"]).html()
+
+					htmlContent += '<div class="row box3">\
+										<div class="col-3">\
+											<p>姓名</p>\
+											<p>Email</p>\
+											<p>入住日期</p>\
+											<p>退房日期</p>\
+										</div>\
+										<div class="col-6">\
+											<p>' + data_["account_name"] + '</p>\
+											<p>' + data_["account_email"] + '</p>\
+											<p>' + data_["check_in_date"] + '</p>\
+											<p>' + data_["check_out_date"] + '</p>\
+										</div>\
+									</div>'
+
+					$("#room" + data_["room_number"]).html(htmlContent)
+
+					console.log("htmlContent: " + htmlContent)
+				}
+			}
+		}
+
+		//-------------------- 取得商鋪資訊並顯示於網頁上 --------------------//
+
+		function get_unapproved_store_data() {
+			//取得商鋪資訊
+			$.get("http://127.0.0.1:8000/get_store_admin/1", (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("取得商店資料失敗，" + error_message[res["code"]]);
+					else alert("取得商店資料失敗，不明錯誤");
+					return;
+				}
+
+				listData(res["content"]);
+			});
+
+			// 顯示資料
+			async function listData(data) {
+				if (data.length == 0) {
+					$("#store_tbody").html("");
+					return;
+				}
+
+				var htmlContent = "";
+
+				for (var store_id in data) {
+					var data_ = data[store_id]
+
+					htmlContent += '<tr>\
+                                <td>' + store_id + '</td>\
+                                <td>' + data_["store_name"] + '</td>\
+								<td><a href="/admin/storeDetailed?store_id=' + store_id + '" style="color: #6e6e6e;">詳細資料</a></td>\
+                            </tr>'
+				};
+
+				$("#store_tbody").html(htmlContent);
+
+				htmlContent = '<div class="col-auto"><a href="#" class="store-page-link" data-action="l" style="color: #6e6e6e;">&laquo;</a></div>\
+                        <div class="col-auto" id="store_table_idx">1</div>\
+                        <div class="col-auto"><a href="#" class="store-page-link" data-action="r" style="color: #6e6e6e;">&raquo;</a></div>'
+
+				$("#store_page_idx_").html(htmlContent);
+			}
+		}
+
+
+		//表單頁面
+		function storePageChange(dir) {
+			//確認是否超出頁數
+			var pageIdx;
+			if (dir == "l") pageIdx = parseInt($("#store_table_idx").html()) - 1;
+			else pageIdx = parseInt($("#store_table_idx").html()) + 1;
+
+			if (pageIdx == 0) return;
+
+			//設置頁碼
+			$("#store_table_idx").html(pageIdx);
+
+			//取得訂房資訊
+			$.get("http://127.0.0.1:8000/get_store_admin/" + pageIdx, (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("取得商店資料失敗，" + error_message[res["code"]]);
+					else alert("取得商店資料失敗，不明錯誤");
+					return;
+				}
+
+				listData(res["content"]);
+			});
+
+			// 顯示資料
+			async function listData(data) {
+				if (data.length === 0) {
+					$("#store_tbody").html("");
+					return;
+				}
+
+				var htmlContent = "";
+
+				for (var store_id in data) {
+					var data_ = data[store_id]
+
+					htmlContent += '<tr>\
+                                <td>' + store_id + '</td>\
+                                <td>' + data_["store_name"] + '</td>\
+								<td><a href="/admin/storeDetailed?store_id=' + store_id + '" style="color: #6e6e6e;">詳細資料</a></td>\
+                            </tr>'
+				};
+
+				$("#store_tbody").html(htmlContent);
+			}
+		}
+
+
+
+	</script>
+</body>
+
+</html>

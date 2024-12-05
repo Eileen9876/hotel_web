@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>旅客 - 訂房</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- //Meta tag Keywords -->
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- Bootstrap-Core-CSS -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="/jquery/dist/jquery.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		p {
+			color: #6e6e6e;
+			size: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="/index#home_div">
+					<p>關於</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/index#room_div">
+					<p>房型介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/index#store_div">
+					<p>周邊店家介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/traveler/index">
+					<p>個人主頁</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" id="logout">
+					<p>登出</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<!-- booking form -->
+	<div class="container py-xl-5 py-lg-3" id="content" style="margin-top: 50px;">
+		<h3 class="tittle text-center text-bl font-weight-bold">訂房表單</h3>
+		<div class="comment-top mt-5">
+			<div class="comment-bottom mobamuinfo_mail_grid_right">
+				<div class="row">
+					<div class="col-lg-6 form-group date-plu">
+						<label>入住日期</label>
+						<input id="arr_time" type="date" name="date" required="">
+					</div>
+					<div class="col-lg-6 form-group date-plu">
+						<label>退房日期</label>
+						<input id="dep_time" type="date" name="date" required="">
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-6 form-group">
+						<label>房型選擇</label>
+						<select id="room_type" required="" class="form-control">
+							<option value="">房型</option>
+							<option value="single">單人房</option>
+							<option value="double">雙人房</option>
+							<option value="quad">四人房</option>
+						</select>
+					</div>
+				</div>
+				<button id="send" class="btn submit mt-3">送出</button>
+			</div>
+		</div>
+	</div>
+	<!-- //booking form -->
+
+	<script type="module">
+		//---------------------------- 初始化設定 ----------------------------//
+
+		$.ajaxSetup({
+			async: false,
+			contentType: "application/json; charset=utf-8"
+		});
+
+		const token = sessionStorage.getItem("token");
+
+		const error_message = {
+			"101": "token 過期",
+			"102": "token 無效",
+			"103": "無token",
+			"201": "Email不符合格式",
+			"202": "密碼不符合規定",
+			"203": "密碼錯誤",
+			"204": "帳號不存在",
+			"301": "該時段已無空房",
+			"999": "伺服器錯誤"
+		}
+
+		checkLogin()
+
+		function checkLogin() {
+			if (token == null) {
+				window.location.replace("/login");
+			}
+		}
+
+		//-------------------- 登出 --------------------//
+
+		$(document).on("click", "#logout", function (event) {
+			event.preventDefault();
+
+			sessionStorage.clear();
+
+			alert("登出成功，將回到首頁");
+
+			window.location.replace("/index");
+		});
+
+
+		//--------------------------- 按鈕功能指派 ---------------------------//
+
+		$("#send").click(() => {
+			if ($('#arr_time').val() == "" || $('#dep_time').val() == "" || $('#people').val() == ""
+				|| $('#room_type').val() == "" || $('#name').val() == "" || $('#email').val() == "") {
+				alert("請填寫完整資料");
+				return;
+			}
+
+			const data = {
+				check_in_date: $('#arr_time').val(),
+				check_out_date: $('#dep_time').val(),
+				room_type: $('#room_type').val()
+			};
+
+			$.ajax({
+				url: "http://127.0.0.1:8000/booking",
+				type: "POST",
+				data: JSON.stringify(data),
+				headers: {
+					Authorization: `Bearer ${token}` // 帳號識別
+				},
+				success: function (res) {
+					if (res["status"] == "error") {
+						if (res["code"] in error_message) alert("訂房失敗，" + error_message[res["code"]]);
+						else alert("訂房失敗，不明錯誤");
+						return;
+					}
+
+					$("#content").html('<h3 class="tittle text-center text-bl font-weight-bold">訂房成功</h3>');
+				},
+				error: function (xhr, status, error) {
+					alert("訂房失敗，" + merror);
+				}
+			});
+		});
+
+	</script>
+</body>
+
+</html>

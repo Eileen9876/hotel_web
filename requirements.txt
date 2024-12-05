@@ -2,3 +2,7 @@ Flask
 Flask-Cors
 mysql-connector-python
 qrcode
+pillow
+flask-bcrypt
+PyJWT
+python-dotenv

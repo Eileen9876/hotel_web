@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>管理員 - 商店資訊</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- Bootstrap-Core-CSS -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		p {
+			color: #6e6e6e;
+			size: 20px;
+		}
+
+		.item-info-data {
+			width: 100%;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+			border-bottom: 1px solid #e8e8e8;
+		}
+
+		.item-info-data-last {
+			width: 100%;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+		}
+
+		.item-name {
+			width: 20%;
+			display: flex;
+			align-items: center;
+		}
+
+		.item-content {
+			width: 80%;
+			display: flex;
+			align-items: center;
+		}
+
+		.storeImg {
+			width: 100%;
+			height: 520px;
+			border-radius: 5px;
+			object-fit: cover;
+			/* 和background-image設定background-size: cover一樣，圖片剛好填滿 */
+			object-position: center;
+		}
+
+		.store_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			height: 40px;
+			width: 100%;
+		}
+
+		#info {
+			align-content: center;
+			/*垂直置中*/
+			height: 150px;
+			overflow-y: auto;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="/admin/index#">
+					<p class="nav_p_">訂房資訊</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/admin/index#unapprovedStore">
+					<p class="nav_p_">未審核商店列表</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<!-- info -->
+	<div class="container justify-content-sm-center" id="storeInfo" style="margin-top: 100px;">
+		<div class="row">
+			<div class="col-6">
+				<img class="storeImg" src="" />
+			</div>
+			<div class="col-6">
+				<div class="row item-info-data">
+					<div class="item-name">店家名稱</div>
+					<div class="item-content" id="storeName"></div>
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">地址</div>
+					<div class="item-content" id="address"></div>
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">連絡電話</div>
+					<div class="item-content" id="phone"></div>
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">店家資訊</div>
+					<div class="item-content" id="info"></div>
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">官方網站</div>
+					<div class="item-content" id="officeURL"></div>
+				</div>
+				<div class="row item-info-data-last">
+					<div class="item-name">GOOGLE MAP</div>
+					<div class="item-content" id="googleMapURL"></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container" style="margin-top: 35px;">
+			<div class="row justify-content-center">
+				<button id="approvedBtn" class="btn btn-primary btn_">核可</button>
+				<button id="rejectedBtn" class="btn btn-primary btn_" style="margin-left: 20px">退回</button>
+			</div>
+		</div>
+	</div>
+	<!-- info -->
+
+	<script type="module">
+		//--------------------------- 初始化 ---------------------------//
+
+		$.ajaxSetup({
+			async: false,
+			contentType: "application/json; charset=utf-8"
+		});
+
+		const error_message = {
+			"101": "token 過期",
+			"102": "token 無效",
+			"103": "無token",
+			"201": "Email不符合格式",
+			"202": "密碼不符合規定",
+			"203": "密碼錯誤",
+			"204": "帳號不存在",
+			"301": "該時段已無空房",
+			"999": "伺服器錯誤"
+		}
+
+		const urlParams = new URLSearchParams(window.location.search);
+
+		const storeId = urlParams.get('store_id');
+		const isApproved = urlParams.get('is_approved');  // 1: 已批准，0: 未批准
+
+		const token = sessionStorage.getItem("token");
+		const user_name = sessionStorage.getItem("name");
+
+		const requestData = {
+			"store_id": storeId
+		}
+
+		get_data();
+
+		//--------------------------- 功能設置 ---------------------------//
+
+		$("#approvedBtn").click(() => {
+			$.post("http://127.0.0.1:8000/approved_store", JSON.stringify(requestData), (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("設置失敗，" + error_message[res["code"]]);
+					else alert("設置失敗，不明錯誤");
+					return;
+				}
+
+				alert("設置成功");
+				window.location.replace("/admin/index");
+			});
+		});
+
+		$("#rejectedBtn").click(() => {
+			$.post("http://127.0.0.1:8000/rejected_store", JSON.stringify(requestData), (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("設置失敗，" + error_message[res["code"]]);
+					else alert("設置失敗，不明錯誤");
+					return;
+				}
+
+				alert("設置成功");
+				window.location.replace("/admin/index");
+			});
+		});
+
+		//--------------------------- 函式 ---------------------------//
+
+		function get_data() {
+			$.post("http://127.0.0.1:8000/get_store_detailed_merchant", JSON.stringify(requestData), async (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("取得商店資料失敗，" + error_message[res["code"]]);
+					else alert("取得商店資料失敗，不明錯誤");
+					return;
+				}
+
+				let content = res["content"];
+
+				list_data(content)
+			});
+		}
+
+		function list_data(data) {
+			$("img").attr("src", data["image"]["store_image"]);
+			$("#officeURL").html(data["office_url"]);
+			$("#googleMapURL").html(data["google_map_url"]);
+			$("#storeName").html(data["store_name"]);
+			$("#address").html(data["store_address"]);
+			$("#phone").html(data["store_phone"]);
+			$("#info").html(data["store_intro"]);
+		}
+	</script>
+</body>
+
+</html>

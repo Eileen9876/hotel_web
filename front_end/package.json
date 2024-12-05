@@ -9,6 +9,7 @@
     "cookie-parser": "~1.4.4",
     "cookieparser": "^0.1.0",
     "debug": "~2.6.9",
+    "dotenv": "^16.4.5",
     "echarts": "^5.5.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",

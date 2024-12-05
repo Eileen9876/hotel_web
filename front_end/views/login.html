@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>登入</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- //Meta tag Keywords -->
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- Bootstrap-Core-CSS -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="/jquery/dist/jquery.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		p {
+			color: #6e6e6e;
+			size: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="index#home_div">
+					<p>關於</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="index#room_div">
+					<p>房型介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="index#store_div">
+					<p>周邊店家介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="login">
+					<p>登入</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<!-- login form -->
+	<div class="container py-xl-5 py-lg-3" id="content" style="margin-top: 50px;">
+		<h3 class="title text-center text-bl font-weight-bold">登入</h3>
+		<div class="comment-top mt-5">
+			<div class="comment-bottom mobamuinfo_mail_grid_right">
+				<label>Email</label>
+				<input id="email" class="form-control" type="email" name="Email" placeholder="Email" required="">
+				<label>密碼</label>
+				<input id="password" class="form-control" type="password" name="password" required minlength="8"
+					maxlength="20" placeholder="密碼" required="">
+				<button id="send" class="btn submit mt-3">登入</button>
+				<a class="btn submit mt-3" href="register">註冊帳號</a>
+			</div>
+		</div>
+	</div>
+	<!-- //login form -->
+
+	<script type="module">
+		//---------------------------- 初始化設定 ----------------------------//
+
+		$.ajaxSetup({
+			async: false,
+			contentType: "application/json; charset=utf-8"
+		});
+
+		const error_message = {
+			"101": "token 過期",
+			"102": "token 無效",
+			"103": "無token",
+			"201": "Email不符合格式",
+			"202": "密碼不符合規定",
+			"203": "密碼錯誤",
+			"204": "帳號不存在",
+			"301": "該時段已無空房",
+			"999": "伺服器錯誤"
+		}
+
+		//--------------------------- 按鈕功能指派 ---------------------------//
+
+		$("#send").click(() => {
+			if ($('#email').val() == "") {
+				alert("Email 不可為空");
+				return;
+			}
+
+			if ($('#password').val() == "") {
+				alert("密碼不可為空");
+				return;
+			}
+
+			if (!isPasswordValid($('#password').val())) {
+				alert("密碼為英文與數字組合，大於5位數、小於20位數");
+				return;
+			}
+
+			const data = {
+				email: $('#email').val(),
+				password: $('#password').val()
+			};
+
+			$.post("http://127.0.0.1:8000/login", JSON.stringify(data), (res) => {
+				if (res["status"] == "error") {
+					if (res["code"] in error_message) alert("登入失敗，" + error_message[res["code"]]);
+					else alert("登入失敗，不明錯誤");
+
+					return
+				}
+
+				const token = res["content"]["token"]
+				const name = res["content"]["name"]
+				const type = res["content"]["type"]
+
+				sessionStorage.setItem("token", token)
+				sessionStorage.setItem("name", name)
+				sessionStorage.setItem("type", type)
+
+				if (type == "TRAVELER") {
+					window.location.replace("/traveler/index");
+				} else {
+					window.location.replace("/merchant/index");
+				}
+			});
+		});
+
+		/**
+		 * 確認密碼符合規定
+		 * 1. 僅包含數字和英文
+		 * 2. 大於5位數、小於20位數
+		 */
+		function isPasswordValid(password) {
+			// 正則表達式: 僅允許數字和英文，長度 6-20 位
+			const passwordRegex = /^[A-Za-z0-9]{6,20}$/;
+
+			if (!passwordRegex.test(password)) return false;
+
+			return true;
+		}
+	</script>
+</body>
+
+</html>

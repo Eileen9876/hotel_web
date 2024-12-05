@@ -1,0 +1,449 @@
+﻿<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>商家 - 主頁面</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<!-- //Meta tag Keywords -->
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- banner slider -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		img {
+			width: 100%;
+			object-fit: cover;
+			/* 和background-image設定background-size: cover一樣，圖片剛好填滿 */
+			object-position: center;
+		}
+
+		h3 {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+
+		.container_ {
+			padding-bottom: 20px;
+		}
+
+		.btn_ {
+			background-color: #6e6e6e;
+			border-radius: 5px;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			width: 200px;
+			height: 50px;
+			font-size: 20px;
+		}
+
+		#book_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			margin-left: 20px;
+			height: 30px;
+			width: 100px;
+			padding-top: 2px;
+
+
+		}
+
+		#store_btn_ {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+		}
+
+		.store_col_ {
+			justify-content: center;
+			padding: 20px;
+			margin: 10px;
+			background-color: #e8e8e8;
+			border-radius: 5px;
+			height: 500px;
+		}
+
+		.store_col_info {
+			align-content: center;
+			vertical-align: middle;
+			height: 150px;
+			width: 100%;
+			margin-bottom: 15px;
+			overflow-y: auto;
+		}
+
+		.store_col_ img {
+			border-radius: 5px;
+			margin-bottom: 20px;
+			height: 200px;
+		}
+
+		.roomIdx {
+			width: auto;
+			height: 50px;
+			color: rgb(89, 89, 89);
+			font-size: 20px;
+			vertical-align: middle;
+			text-align: center;
+		}
+
+		.box1 {
+			border-radius: 5px;
+			padding: 10px;
+			margin: 5px;
+			background-color: #f7f7f7;
+		}
+
+		.box2 {
+			color: rgb(89, 89, 89);
+			font-size: 50px;
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.box3 {
+			border-top: 2px solid #c7c4c4;
+			padding: 25px;
+			margin: 5px;
+			font-size: 15px;
+		}
+
+		p {
+			color: #4f4f4f;
+		}
+
+		#addStoreBtn_div {
+			justify-content: center;
+			margin: 10px;
+			border-radius: 5px;
+			height: 500px;
+		}
+
+		#addStoreBtn {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 500px;
+		}
+
+		input {
+			display: block;
+			padding: 0.375rem 0.75rem;
+			font-size: 1rem;
+			line-height: 1.5;
+			color: #495057;
+			background-color: #fff;
+			background-clip: padding-box;
+			border: 1px solid #ced4da;
+			border-radius: 0.25rem;
+			transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+			height: 30px;
+		}
+
+		.label {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		#bookRecord {
+			justify-content: center;
+			margin-top: 50px;
+			margin-bottom: 100px;
+		}
+
+		#bookTable {
+			margin-top: 20px;
+			font-size: 15px;
+		}
+
+		.table th,
+		.table td {
+			vertical-align: middle;
+			text-align: center;
+			padding: 8px;
+		}
+
+		#book_page_idx_ {
+			justify-content: center;
+			vertical-align: middle;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="/index">
+					<p>關於</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/index#room_div">
+					<p>房型介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/index#store_div">
+					<p>周邊店家介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/merchant/index">
+					<p>個人主頁</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" id="logout">
+					<p>登出</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<h3 id="name" class="text-center text-bl font-weight-bold" style="padding-top: 100px; margin-bottom: 50px;"></h3>
+
+	<div class="container" style="margin-top: 35px;">
+		<div class="row justify-content-center">
+			<a href="/merchant/addStore" class="btn btn-primary btn_">新增商店</a>
+		</div>
+	</div>
+
+	<!-- 商店列表 -->
+	<div class="container" style="margin-top: 50px;">
+		<div class="table-responsive">
+			<table class="table table-bordered table-striped" id="storeTable">
+				<thead>
+					<tr>
+						<th scope="col">識別碼</th>
+						<th scope="col">商店名稱</th>
+						<th scope="col">審查狀態</th>
+						<th scope="col">詳細資訊</th>
+					</tr>
+				</thead>
+				<tbody id="store_tbody"></tbody>
+			</table>
+		</div>
+	</div>
+	<!-- //商店列表 -->
+
+	<div class="container" id="clickChart_div">
+		<div class="row justify-content-md-center">
+			<div class="row" id="store_page_idx_"></div>
+		</div>
+	</div>
+
+
+
+	<script type="module">
+		$.ajaxSetup({
+			async: false,
+			contentType: "application/json; charset=utf-8"
+		});
+
+		const token = sessionStorage.getItem("token");
+
+		const user_name = sessionStorage.getItem("name");
+
+		const error_message = {
+			"101": "token 過期",
+			"102": "token 無效",
+			"103": "無token",
+			"201": "Email不符合格式",
+			"202": "密碼不符合規定",
+			"203": "密碼錯誤",
+			"204": "帳號不存在",
+			"301": "該時段已無空房",
+			"999": "伺服器錯誤"
+		}
+
+		const room_type_map = {
+			"single": "單人房",
+			"double": "雙人房",
+			"quad": "四人房"
+		}
+
+		const review_status_map = {
+			'PENDING': "審查中",
+			'APPROVED': "通過",
+			'REJECTED': "被拒"
+		}
+
+		if (token == null) {
+			window.location.replace("/index");
+		}
+
+		$("#name").html(user_name)
+
+		// 为父容器绑定事件监听器
+		document.addEventListener('DOMContentLoaded', () => {
+			document.body.addEventListener('click', (event) => {
+				if (event.target.matches('.store-page-link')) {
+					event.preventDefault();
+					const action = event.target.dataset.action;
+					storePageChange(action);
+				}
+			});
+		});
+
+
+		get_store_data();
+
+		//-------------------- 登出 --------------------//
+
+		$(document).on("click", "#logout", function (event) {
+			event.preventDefault();
+
+			sessionStorage.clear();
+
+			alert("登出成功，將回到首頁");
+
+			window.location.replace("/index");
+		});
+
+		//-------------------- 取得商鋪資訊並顯示於網頁上 --------------------//
+
+		function get_store_data() {
+			//取得商鋪資訊
+			$.ajax({
+				url: "http://127.0.0.1:8000/get_store_merchant/1",
+				type: "GET",
+				headers: {
+					Authorization: `Bearer ${token}` // 帳號識別
+				},
+				success: function (res) {
+					if (res["status"] == "error") {
+						if (res["code"] in error_message) alert("取得商店資料失敗，" + error_message[res["code"]]);
+						else alert("取得商店資料失敗，不明錯誤");
+						return;
+					}
+
+					listData(res["content"]);
+				},
+				error: function (xhr, status, error) {
+					alert("取得資料失敗，" + error);
+				}
+			});
+
+			//在網頁中列出資料
+			function listData(data) {
+				if (data.length == 0) {
+					$("#store_tbody").html("");
+					return;
+				}
+
+				var htmlContent = "";
+
+				for (var store_id in data) {
+					var data_ = data[store_id]
+
+					htmlContent += '<tr>\
+									<td>' + store_id + '</td>\
+									<td>' + data_["store_name"] + '</td>\
+									<td>' + review_status_map[data_["review_status"]] + '</td>\
+									<td><a href="/merchant/storeDetailed?store_id=' + store_id + '" style="color: #6e6e6e;">詳細資料</a></td>\
+								</tr>'
+				};
+
+				$("#store_tbody").html(htmlContent);
+
+				htmlContent = '<div class="col-auto"><a href="#" class="store-page-link" data-action="l" style="color: #6e6e6e;">&laquo;</a></div>\
+                        <div class="col-auto" id="store_table_idx">1</div>\
+                        <div class="col-auto"><a href="#" class="store-page-link" data-action="r" style="color: #6e6e6e;">&raquo;</a></div>'
+
+				$("#store_page_idx_").html(htmlContent);
+			}
+		}
+
+		//表單頁面
+		function storePageChange(dir) {
+			//確認是否超出頁數
+			var pageIdx;
+			if (dir == "l") pageIdx = parseInt($("#store_table_idx").html()) - 1;
+			else pageIdx = parseInt($("#store_table_idx").html()) + 1;
+
+			if (pageIdx == 0) return;
+
+			//設置頁碼
+			$("#store_table_idx").html(pageIdx);
+
+			//取得商鋪資訊
+			$.ajax({
+				url: "http://127.0.0.1:8000/get_store_merchant/" + pageIdx,
+				type: "GET",
+				headers: {
+					Authorization: `Bearer ${token}` // 帳號識別
+				},
+				success: function (res) {
+					if (res["status"] == "error") {
+						if (res["code"] in error_message) alert("取得商店資料失敗，" + error_message[res["code"]]);
+						else alert("取得商店資料失敗，不明錯誤");
+						return;
+					}
+
+					listData(res["content"]);
+				},
+				error: function (xhr, status, error) {
+					alert("取得資料失敗，" + error);
+				}
+			});
+
+			// 顯示資料
+			function listData(data) {
+				if (data.length == 0) {
+					$("#store_tbody").html("");
+					return;
+				}
+
+				var htmlContent = "";
+
+				for (var store_id in data) {
+					const data_ = data[store_id]
+
+					htmlContent += '<tr>\
+										<td>' + store_id + '</td>\
+										<td>' + data_["store_name"] + '</td>\
+										<td>' + review_status_map[data_["review_status"]] + '</td>\
+										<td><a href="/merchant/storeDetailed?store_id=' + store_id + '" style="color: #6e6e6e;">詳細資料</a></td>\
+									</tr>'
+				};
+
+				$("#store_tbody").html(htmlContent);
+			}
+		}
+
+	</script>
+</body>
+
+</html>

@@ -5,7 +5,7 @@ EXPOSE 8000
 # 安裝所需依賴項
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-    
+
 # 設置專案
 RUN mkdir /back_end
 COPY ./back_end /back_end
@@ -13,7 +13,7 @@ COPY ./back_end /back_end
 # 設置工作位置
 WORKDIR /back_end
 
-# 設置備份資料夾
+# 設置映射資料夾，將主機的資料夾掛載至此，用於存放備份資料
 RUN mkdir /backup
 
 # 設置起始檔

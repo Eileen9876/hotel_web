@@ -9,7 +9,7 @@ services:
       - MYSQL_DATABASE=Hotel
       - BACKUP_DIR=backup
     volumes:
-      - ./data:/backup
+      - ./backup:/backup
 
   back-end:
     build:
@@ -17,6 +17,7 @@ services:
       dockerfile: dockerfile_backend
     container_name: backend
     environment:
+      - JWT_KEY=qwe123
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USER=root
@@ -25,7 +26,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./data:/back_end/backup
+      - ./backup:/back_end/backup
 
   front-end:
     build:

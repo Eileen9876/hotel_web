@@ -1,103 +1,88 @@
+from functools import wraps
+
 import mysql.connector as connector
+from module.const import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD
 
-class Condition:
-    def __init__(self):
-        self.data = {}
 
-    def Append(self, column: str, value: str):
-        self.data[column] = value
+class DbUtil:
+    def print_query_and_result(callback):
+        @wraps(callback)
+        def decorator(query: str, params=()):
+            if params == ():
+                print("query: ", query)
+            else:
+                print("query: ", query % params)
 
-    def Create(self):
-        clause = []
-        
-        for col in self.data.keys():
-            clause.append(col + " = '%s'" % self.data[col])
+            result = callback(query, params)
 
-        cdn = " AND ".join(clause)
+            if result:
+                print("result: ", result)
 
-        return cdn
-        
-class DbHandler:
-    
-    def __init__(
-            self, 
-            host: str, 
-            port: int, 
-            user: str, 
-            password: str, 
-            database: str):
-        self.host = host
-        self.port = port
-        self.user = user
-        self.password = password
-        self.database = database
+            return result
 
-    def Connect(self):   
-        db = connector.connect(
-            host = self.host,
-            port = self.port,
-            user = self.user,
-            password = self.password,
-            database = self.database
+        return decorator
+
+    @staticmethod
+    def connect():
+        return connector.connect(
+            host=DB_HOST,
+            port=DB_PORT,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database="Hotel",
         )
 
-        return db
-    
-    def Insert(self, table: str, data: dict):
-        columns = ", ".join(data.keys())
-        placeholders = ", ".join(["%s"] * len(data))
-        query = f"INSERT INTO {table} ({columns}) VALUES ({placeholders});"
-
-        self.ExecuteQuery_NoReturn(query, tuple(data.values()))
-
-    def Update(self, table: str, data: dict, condition: str):
-        clause = []
-        for col in data.keys():
-            clause.append(col + " = '%s'" % data[col])
-
-        query = f"UPDATE {table} SET {','.join(clause)} WHERE {condition};"
-
-        self.ExecuteQuery_NoReturn(query)
-
-    def Select(self, table: str, colName: list):
-        query = f"SELECT {', '.join(colName)} FROM {table};"
-        return self.ExecuteQuery_Return(query)
-
-    def SelectWhere(self, table: str, colName: list, condition: str):
-        query = f"SELECT {', '.join(colName)} FROM {table} WHERE {condition};"
-        return self.ExecuteQuery_Return(query)
-    
-    def ExecuteQuery_NoReturn(self, query: str, params=()):
-        db = self.Connect()
-        cursor = db.cursor() 
+    @staticmethod
+    @print_query_and_result
+    def execute(query: str, params=()):
+        db = DbUtil.connect()
+        cursor = db.cursor()
 
         try:
-            cursor.execute(query, params) 
-            db.commit() 
+            cursor.execute(query, params)
+            db.commit()
 
         except Exception as ex:
             raise ex
 
         finally:
-            cursor.close() 
-            db.close()  
-        
-    def ExecuteQuery_Return(self, query: str, params=()):
-        db = self.Connect()
-        cursor = db.cursor() 
+            cursor.close()
+            db.close()
 
-        try:            
-            cursor.execute(query, params) 
+    @staticmethod
+    @print_query_and_result
+    def execute_fetch_all(query: str, params=()):
+        db = DbUtil.connect()
+        cursor = db.cursor()
+
+        try:
+            cursor.execute(query, params)
             data = cursor.fetchall()
 
         except Exception as ex:
             raise ex
 
         finally:
-            cursor.close() 
-            db.close() 
+            cursor.close()
+            db.close()
 
         return data
 
+    @staticmethod
+    @print_query_and_result
+    def execute_fetch_one(query: str, params=()):
+        db = DbUtil.connect()
+        cursor = db.cursor()
 
+        try:
+            cursor.execute(query, params)
+            data = cursor.fetchone()
 
+        except Exception as ex:
+            raise ex
+
+        finally:
+            cursor.close()
+            db.close()
+
+        return data

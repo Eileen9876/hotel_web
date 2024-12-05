@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+	<title>商家 - 新增商店</title>
+	<!-- Meta tag Keywords -->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="UTF-8" />
+	<meta name="keywords" content="" />
+	<script>
+		addEventListener("load", function () {
+			setTimeout(hideURLbar, 0);
+		}, false);
+
+		function hideURLbar() {
+			window.scrollTo(0, 1);
+		}
+	</script>
+	<!-- //Meta tag Keywords -->
+
+	<!-- Custom-Files -->
+	<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+	<!-- Bootstrap-Core-CSS -->
+	<link rel="stylesheet" href="/stylesheets/style.css" type="text/css" media="all" />
+	<!-- Style-CSS -->
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet">
+	<!-- Font-Awesome-Icons-CSS -->
+	<!-- //Custom-Files -->
+
+	<!-- Web-Fonts -->
+	<link href="http://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link href="http://fonts.googleapis.com/css?family=Oxygen:300,400,700&amp;subset=latin-ext" rel="stylesheet">
+	<!-- //Web-Fonts -->
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+	<style type="text/css">
+		body {
+			background-color: #ffffff;
+		}
+
+		.nav_ {
+			background-color: #e8e8e8;
+		}
+
+		p {
+			color: #6e6e6e;
+			size: 20px;
+		}
+
+		.item-info-data {
+			width: 100%;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+			border-bottom: 1px solid #e8e8e8;
+		}
+
+		.item-info-data-last {
+			width: 100%;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+		}
+
+		.item-name {
+			width: 20%;
+			display: flex;
+			align-items: center;
+		}
+
+		.item-content {
+			width: 80%;
+		}
+
+		.storeImg {
+			width: 100%;
+			height: 80%;
+			object-fit: cover;
+			/* 和background-image設定background-size: cover一樣，圖片剛好填滿 */
+			object-position: center;
+			border: 1px solid #e1e1e1;
+			border-radius: 5px;
+		}
+
+		#imgInput {
+			width: 100%;
+			height: 10%;
+			margin-top: 10px;
+		}
+
+		#storeBtn {
+			background-color: #6e6e6e;
+			border: 2px solid #6e6e6e;
+			color: #e8e8e8;
+			height: 40px;
+			width: 200px;
+			margin-top: 50px;
+			font-size: 18px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- 導覽 -->
+	<div class="fixed-top container-fluid nav_">
+		<ul class="nav justify-content-end">
+			<li class="nav-item">
+				<a class="nav-link" href="/index#home_div">
+					<p>關於</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/index#room_div">
+					<p>房型介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/index#store_div">
+					<p>周邊店家介紹</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/merchant/index">
+					<p>個人主頁</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#" id="logout">
+					<p>登出</p>
+				</a>
+			</li>
+		</ul>
+	</div>
+	<!-- //導覽 -->
+
+	<!-- info -->
+	<div class="container" id="storeInfo" style="margin-top: 100px;">
+		<div class="row justify-content-md-center">
+			<div class="col-4">
+				<img class="storeImg" />
+				<input type="file" id="imgInput" class="form-control" accept="image/jpeg, image/png" />
+			</div>
+			<div class="col-5">
+				<div class="row item-info-data">
+					<div class="item-name">店家名稱</div>
+					<input type="text" class="form-control item-content" id="storeName">
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">地址</div>
+					<input type="text" class="form-control item-content" id="address">
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">連絡電話</div>
+					<input type="text" class="form-control item-content" id="phone">
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">店家資訊</div>
+					<textarea class="form-control item-content" id="info" style="height: 100px;"></textarea>
+				</div>
+				<div class="row item-info-data">
+					<div class="item-name">官方網站</div>
+					<input type="text" class="form-control item-content" id="officeURL">
+				</div>
+				<div class="row item-info-data-last">
+					<div class="item-name">GOOGLE MAP</div>
+					<input type="text" class="form-control item-content" id="googleMapURL">
+				</div>
+			</div>
+		</div>
+
+		<div class="row justify-content-md-center">
+			<button id="storeBtn" class="btn btn-primary">儲存</button>
+		</div>
+	</div>
+	<!-- info -->
+
+	<script type="module">
+		//--------------------------- 初始化 ---------------------------//
+		$.ajaxSetup({
+			async: false,
+			contentType: "application/json; charset=utf-8"
+		});
+
+		const error_message = {
+			"101": "token 過期",
+			"102": "token 無效",
+			"103": "無token",
+			"201": "Email不符合格式",
+			"202": "密碼不符合規定",
+			"203": "密碼錯誤",
+			"204": "帳號不存在",
+			"301": "該時段已無空房",
+			"999": "伺服器錯誤"
+		}
+
+		const token = sessionStorage.getItem("token");
+
+		let picData;
+
+		//-------------------- 登出 --------------------//
+
+		$(document).on("click", "#logout", function (event) {
+			event.preventDefault();
+
+			sessionStorage.clear();
+
+			alert("登出成功，將回到首頁");
+
+			window.location.replace("/index");
+		});
+
+		//--------------------------- 功能設置 ---------------------------//
+
+		$("#imgInput").change(function () {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				console.log(e.target.result);
+				picData = e.target.result;
+				$("img").attr("src", e.target.result);
+			}
+			reader.readAsDataURL(this.files[0]);
+		});
+
+		$("#storeBtn").click(() => {
+			var data = {
+				name: $('#storeName').val(),
+				address: $('#address').val(),
+				phone: $('#phone').val(),
+				intro: $('#info').val(),
+				office_url: $('#officeURL').val(),
+				google_map_url: $('#googleMapURL').val(),
+				image: picData
+			};
+
+			$.ajax({
+				url: "http://127.0.0.1:8000/add_store_merchant",
+				type: "POST",
+				data: JSON.stringify(data),
+				headers: {
+					Authorization: `Bearer ${token}` // 帳號識別
+				},
+				success: function (res) {
+					// 執行成功
+					if (res["status"] == "ok") {
+						alert("新增成功");
+						window.location.replace("/merchant/index");
+						return;
+					}
+
+					// 執行失敗
+					if (res["code"] in error_message) alert("新增失敗，" + error_message[res["code"]]);
+					else alert("新增失敗，不明錯誤");
+				},
+				error: function (xhr, status, error) {
+					alert("新增失敗，" + error);
+				}
+			});
+		});
+
+	</script>
+</body>
+
+</html>
